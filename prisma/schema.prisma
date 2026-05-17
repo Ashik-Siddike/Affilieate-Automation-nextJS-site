@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Post {
+  id                  String   @id @default(uuid())
+  title               String
+  slug                String   @unique
+  content             String   @db.Text
+  amazonAffiliateLink String
+  imageUrl            String
+  brand               String
+  modelNumber         String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model products {
+  asin          String   @id
+  title         String?
+  price         String?
+  rating        String?
+  review_count  String?
+  image_url     String?
+  product_url   String?
+  is_published  Boolean  @default(false)
+  post_link     String?
+  created_at    DateTime @default(now())
+}
+
+model keyword_pool {
+  id          String   @id @default(uuid())
+  keyword     String   @unique
+  brand       String?
+  modelNumber String?
+  status      String   @default("pending") // 'pending', 'processed', 'failed'
+  createdAt   DateTime @default(now())
+}
