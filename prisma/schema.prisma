@@ -42,3 +42,14 @@ model keyword_pool {
   status      String   @default("pending") // 'pending', 'processed', 'failed'
   createdAt   DateTime @default(now())
 }
+
+model sites {
+  id           String   @id @default(uuid())
+  name         String
+  url          String?
+  username     String?
+  app_password String?
+  n8n_webhook  String?
+  keywords     String[] @default([])
+  created_at   DateTime @default(now())
+}
