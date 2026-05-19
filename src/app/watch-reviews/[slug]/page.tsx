@@ -16,20 +16,41 @@ export async function generateMetadata({ params }: ReviewPageProps): Promise<Met
 
   if (!post) return { title: 'Review Not Found | Whit Logic' };
 
+  const title = `${post.title} — Honest Review & Verdict`;
+  const description = `Our expert team tested the ${post.brand} ${post.modelNumber}. Read our full review with pros & cons, performance analysis, and buying verdict. Is it worth buying in 2025?`;
+  const canonical = `https://whitlogic.online/watch-reviews/${post.slug}`;
+
   return {
-    title: `${post.title} | Whit Logic Reviews`,
-    description: `Read our comprehensive review of the ${post.brand} ${post.modelNumber}. Expert analysis, pros & cons, and verdict.`,
+    title,
+    description,
+    keywords: [
+      `${post.brand} review`, `${post.modelNumber} review`,
+      `${post.brand} ${post.modelNumber}`, 'budget watch review',
+      'tactical watch', 'sports watch', post.brand?.toLowerCase() || '',
+    ],
+    authors: [{ name: 'Whit Logic Editorial Team' }],
     openGraph: {
-      title: post.title,
-      description: `In-depth review of the ${post.brand} ${post.modelNumber}.`,
-      url: `https://whitlogic.online/watch-reviews/${post.slug}`,
+      title,
+      description,
+      url: canonical,
       siteName: 'Whit Logic',
       images: [{ url: post.imageUrl, width: 1080, height: 1080, alt: post.title }],
       type: 'article',
+      publishedTime: post.createdAt.toISOString(),
+      modifiedTime: post.updatedAt.toISOString(),
+      authors: ['https://whitlogic.online'],
+      tags: ['watch review', post.brand || '', 'budget watch'],
     },
-    alternates: { canonical: `https://whitlogic.online/watch-reviews/${post.slug}` },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [post.imageUrl],
+    },
+    alternates: { canonical },
   };
 }
+
 
 export default async function WatchReviewPage({ params }: ReviewPageProps) {
   const { slug } = await params;
