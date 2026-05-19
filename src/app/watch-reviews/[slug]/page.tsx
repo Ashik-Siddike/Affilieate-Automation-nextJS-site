@@ -6,15 +6,16 @@ import Link from 'next/link';
 import SpecTable from '@/components/SpecTable';
 
 interface ReviewPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 // ISR: Revalidate at most every hour if manual revalidation fails
 export const revalidate = 3600;
 
 export async function generateMetadata({ params }: ReviewPageProps): Promise<Metadata> {
+  const { slug } = await params;
   const post = await prisma.post.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
   });
 
   if (!post) {
@@ -46,8 +47,9 @@ export async function generateMetadata({ params }: ReviewPageProps): Promise<Met
 }
 
 export default async function WatchReviewPage({ params }: ReviewPageProps) {
+  const { slug } = await params;
   const post = await prisma.post.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
   });
 
   if (!post) {
@@ -211,12 +213,11 @@ export default async function WatchReviewPage({ params }: ReviewPageProps) {
 
         {/* Hero Image */}
         <div className="relative w-full h-[400px] sm:h-[500px] rounded-2xl overflow-hidden shadow-xl mb-12 group">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={post.imageUrl}
             alt={post.title}
-            fill
-            className="object-cover transform group-hover:scale-105 transition-transform duration-700"
-            priority
+            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
           />
           {/* Subtle overlay for contrast */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
