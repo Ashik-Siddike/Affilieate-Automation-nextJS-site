@@ -34,7 +34,6 @@ export async function generateMetadata({ params }: ReviewPageProps): Promise<Met
       description,
       url: canonical,
       siteName: 'Whit Logic',
-      images: [{ url: post.imageUrl, width: 1080, height: 1080, alt: post.title }],
       type: 'article',
       publishedTime: post.createdAt.toISOString(),
       modifiedTime: post.updatedAt.toISOString(),
@@ -45,7 +44,6 @@ export async function generateMetadata({ params }: ReviewPageProps): Promise<Met
       card: 'summary_large_image',
       title,
       description,
-      images: [post.imageUrl],
     },
     alternates: { canonical },
   };

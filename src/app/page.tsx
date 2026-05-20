@@ -175,8 +175,6 @@ export default async function Home() {
               display: 'grid', gridTemplateColumns: '1fr 1fr',
               transition: 'all 0.3s',
             }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.transform = 'translateY(-4px)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 16px 48px rgba(0,0,0,0.14)'; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.transform = 'translateY(0)'; (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 24px rgba(0,0,0,0.08)'; }}
             >
               <div style={{ position: 'relative', minHeight: '320px' }}>
                 <Image
@@ -278,10 +276,7 @@ export default async function Home() {
                     alt={post.title}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="object-cover"
-                    style={{ transition: 'transform 0.5s ease' }}
-                    onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.transform = 'scale(1.05)')}
-                    onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.transform = 'scale(1)')}
+                    className="object-cover transition-transform duration-500 ease-in-out hover:scale-105"
                   />
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%)' }} />
                   <div style={{ position: 'absolute', top: '12px', left: '12px', display: 'flex', gap: '6px' }}>
