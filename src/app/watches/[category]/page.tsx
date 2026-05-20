@@ -66,7 +66,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         </div>
 
         {posts.length === 0 ? (
-          <div className="bg-white p-12 md:p-20 rounded-3xl text-center border border-slate-200 shadow-sm max-w-2xl mx-auto">
+          <div className="bg-white p-12 md:p-20 rounded-3xl text-center border border-slate-200 shadow-sm max-w-2xl mx-auto flex flex-col items-center justify-center">
             <div className="text-6xl mb-6">🕒</div>
             <h2 className="text-2xl font-bold text-slate-900 mb-4 font-outfit">Coming Soon</h2>
             <p className="text-slate-500 mb-8 text-lg">We are currently testing watches for this category. Check back soon for in-depth reviews!</p>
@@ -75,33 +75,32 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {posts.map((post) => (
               <Link key={post.id} href={`/watch-reviews/${post.slug}`} className="block group h-full">
-                <article className="bg-white rounded-2xl overflow-hidden border border-slate-200 card-hover h-full flex flex-col relative">
+                <article className="bg-white rounded-2xl overflow-hidden border border-slate-200 card-hover h-full flex flex-col relative group">
                   
-                  <div className="relative w-full aspect-square bg-slate-100 overflow-hidden">
-                    <Image src={post.imageUrl} alt={post.title} fill style={{ objectFit: 'cover' }} sizes="(max-width: 768px) 100vw, 300px" className="group-hover:scale-105 transition-transform duration-500 ease-out" />
+                  <div className="relative w-full aspect-square bg-white p-6 overflow-hidden flex items-center justify-center border-b border-slate-100">
+                    <div className="relative w-full h-full">
+                      <Image src={post.imageUrl} alt={post.title} fill style={{ objectFit: 'contain' }} sizes="(max-width: 768px) 100vw, 300px" className="group-hover:scale-110 transition-transform duration-500 ease-out drop-shadow-sm" />
+                    </div>
                     {post.isDeal && (
-                      <div className="absolute top-4 right-4 bg-brand-red text-white px-3 py-1.5 rounded-md text-xs font-bold shadow-sm">
+                      <div className="absolute top-4 right-4 bg-brand-red text-white px-3 py-1.5 rounded-md text-xs font-bold shadow-sm z-10">
                         {post.discountPercentage ? `🔥 ${post.discountPercentage}% OFF` : '🔥 DEAL'}
                       </div>
                     )}
                     
                     {/* Hover Overlay Button */}
-                    <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                      <span className="bg-white text-slate-900 px-6 py-2 rounded-full font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                        Read Review
-                      </span>
+                    <div className="absolute inset-0 bg-slate-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20 pointer-events-none">
                     </div>
                   </div>
                   
-                  <div className="p-5 flex flex-col flex-grow">
+                  <div className="p-5 flex flex-col flex-grow bg-slate-50/50">
                     <div className="flex justify-between items-center mb-3">
-                      <span className="text-primary-600 text-[10px] font-bold uppercase tracking-widest bg-primary-50 px-2 py-1 rounded">{post.brand}</span>
+                      <span className="text-primary-700 text-[10px] font-bold uppercase tracking-widest bg-primary-100 px-2 py-1 rounded">{post.brand}</span>
                       <StarRating rating={post.ratingValue} />
                     </div>
-                    <h3 className="text-lg font-bold text-slate-900 mb-2 leading-snug group-hover:text-primary-600 transition-colors line-clamp-2 font-outfit">
+                    <h3 className="text-sm md:text-base font-bold text-slate-900 mb-2 leading-snug group-hover:text-primary-600 transition-colors line-clamp-3 font-outfit">
                       {post.title}
                     </h3>
                   </div>

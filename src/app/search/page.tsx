@@ -66,26 +66,28 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {posts.map((post) => (
               <Link key={post.id} href={`/watch-reviews/${post.slug}`} className="block group h-full">
-                <article className="bg-white rounded-2xl overflow-hidden border border-slate-200 card-hover h-full flex flex-col relative">
+                <article className="bg-white rounded-2xl overflow-hidden border border-slate-200 card-hover h-full flex flex-col relative group">
                   
-                  <div className="relative w-full aspect-square bg-slate-100 overflow-hidden">
-                    <Image src={post.imageUrl} alt={post.title} fill style={{ objectFit: 'cover' }} sizes="(max-width: 768px) 100vw, 300px" className="group-hover:scale-105 transition-transform duration-500 ease-out" />
+                  <div className="relative w-full aspect-square bg-white p-6 overflow-hidden flex items-center justify-center border-b border-slate-100">
+                    <div className="relative w-full h-full">
+                      <Image src={post.imageUrl} alt={post.title} fill style={{ objectFit: 'contain' }} sizes="(max-width: 768px) 100vw, 300px" className="group-hover:scale-110 transition-transform duration-500 ease-out drop-shadow-sm" />
+                    </div>
                     {post.isDeal && (
-                      <div className="absolute top-4 right-4 bg-brand-red text-white px-3 py-1.5 rounded-md text-xs font-bold shadow-sm">
+                      <div className="absolute top-4 right-4 bg-brand-red text-white px-3 py-1.5 rounded-md text-xs font-bold shadow-sm z-10">
                         {post.discountPercentage ? `🔥 ${post.discountPercentage}% OFF` : '🔥 DEAL'}
                       </div>
                     )}
                   </div>
                   
-                  <div className="p-5 flex flex-col flex-grow">
+                  <div className="p-5 flex flex-col flex-grow bg-slate-50/50">
                     <div className="flex justify-between items-center mb-3">
-                      <span className="text-primary-600 text-[10px] font-bold uppercase tracking-widest bg-primary-50 px-2 py-1 rounded">{post.brand}</span>
+                      <span className="text-primary-700 text-[10px] font-bold uppercase tracking-widest bg-primary-100 px-2 py-1 rounded">{post.brand}</span>
                       <StarRating rating={post.ratingValue} />
                     </div>
-                    <h3 className="text-lg font-bold text-slate-900 mb-2 leading-snug group-hover:text-primary-600 transition-colors line-clamp-2 font-outfit">
+                    <h3 className="text-sm md:text-base font-bold text-slate-900 mb-2 leading-snug group-hover:text-primary-600 transition-colors line-clamp-3 font-outfit">
                       {post.title}
                     </h3>
                   </div>

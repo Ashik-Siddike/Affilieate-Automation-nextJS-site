@@ -53,7 +53,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex gap-8 items-center">
+          <div className="hidden lg:flex gap-6 xl:gap-8 items-center">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
@@ -69,13 +69,13 @@ export default function Navbar() {
           <div className="flex items-center gap-4">
             
             {/* Desktop Search */}
-            <form onSubmit={handleSearch} className="hidden md:block relative group">
+            <form onSubmit={handleSearch} className="hidden lg:block relative group">
               <input
                 type="text"
                 placeholder="Search watches..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-white/5 border border-white/10 focus:border-primary-500 focus:bg-white/10 rounded-full py-2 pr-4 pl-10 text-white text-sm outline-none w-52 focus:w-64 transition-all duration-300 placeholder:text-slate-400"
+                className="bg-white/5 border border-white/10 focus:border-primary-500 focus:bg-white/10 rounded-full py-2 pr-4 pl-10 text-white text-sm outline-none w-48 xl:w-52 focus:w-64 transition-all duration-300 placeholder:text-slate-400"
               />
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -95,7 +95,7 @@ export default function Navbar() {
             <button
               onClick={() => setIsOpen(!isOpen)}
               aria-label="Toggle menu"
-              className="md:hidden text-slate-300 hover:text-white p-2 rounded-lg bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
+              className="lg:hidden text-slate-300 hover:text-white p-2 rounded-lg bg-white/5 border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors"
             >
               {isOpen ? (
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -111,7 +111,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Menu */}
-        <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[400px] opacity-100 pb-6' : 'max-h-0 opacity-0'}`}>
+        <div className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-[400px] opacity-100 pb-6' : 'max-h-0 opacity-0'}`}>
           <div className="pt-4 border-t border-white/10 flex flex-col gap-2">
             <form onSubmit={handleSearch} className="relative mb-3">
               <input

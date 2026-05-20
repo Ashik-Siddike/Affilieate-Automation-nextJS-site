@@ -159,35 +159,53 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <div className="bg-slate-50 min-h-screen pb-24 lg:pb-0">
 
         {/* ───── HERO SECTION ───── */}
-        <div className="relative w-full h-[60vh] min-h-[400px] flex items-end">
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url('${post.imageUrl}')` }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
+        <div className="relative w-full bg-slate-900 border-b border-slate-800 pt-32 pb-16 overflow-hidden">
+          {/* Background Elements */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.03)_1px,transparent_0)] bg-[size:40px_40px]" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-500/10 rounded-full blur-3xl" />
           
-          <div className="relative z-10 w-full max-w-5xl mx-auto px-6 lg:px-8 pb-16 animate-fade-in-up">
-            <div className="flex flex-wrap gap-2 mb-6">
-              <span className="bg-primary-500 text-white px-3 py-1 rounded-md text-xs font-bold uppercase tracking-widest shadow-lg shadow-primary-500/30">
-                {post.brand}
-              </span>
-              <span className="bg-white/20 backdrop-blur-md border border-white/20 text-white px-3 py-1 rounded-md text-xs font-bold shadow-lg">
-                Model: {post.modelNumber}
-              </span>
-            </div>
+          <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row items-center gap-12">
             
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white leading-tight font-outfit mb-6 tracking-tight">
-              {post.title}
-            </h1>
+            <div className="w-full md:w-1/2 order-2 md:order-1 animate-fade-in-up">
+              <div className="flex flex-wrap gap-2 mb-6">
+                <span className="bg-primary-500 text-white px-3 py-1 rounded-md text-xs font-bold uppercase tracking-widest shadow-lg shadow-primary-500/30">
+                  {post.brand}
+                </span>
+                <span className="bg-white/10 backdrop-blur-md border border-white/10 text-white px-3 py-1 rounded-md text-xs font-bold">
+                  Model: {post.modelNumber}
+                </span>
+              </div>
+              
+              <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white leading-tight font-outfit mb-6 tracking-tight line-clamp-4">
+                {post.title}
+              </h1>
 
-            <div className="flex flex-wrap items-center gap-4 text-slate-300 text-sm font-medium">
-              <div className="flex items-center text-primary-400 text-lg">★★★★½</div>
-              <span>{post.ratingCount ?? 89} Reviews</span>
-              <span className="text-slate-600">•</span>
-              <span>{publishedDate}</span>
-              <span className="text-slate-600">•</span>
-              <span>By Whit Logic Team</span>
+              <div className="flex flex-wrap items-center gap-4 text-slate-300 text-sm font-medium">
+                <div className="flex items-center text-primary-400 text-lg">★★★★½</div>
+                <span>{post.ratingCount ?? 89} Reviews</span>
+                <span className="text-slate-600">•</span>
+                <span>{publishedDate}</span>
+                <span className="text-slate-600">•</span>
+                <span>By Whit Logic Team</span>
+              </div>
             </div>
+
+            <div className="w-full md:w-1/2 order-1 md:order-2 flex justify-center md:justify-end">
+              <div className="relative w-full max-w-md aspect-square bg-white rounded-3xl p-8 shadow-2xl shadow-black/50 rotate-3 hover:rotate-0 transition-transform duration-500 ring-4 ring-white/10">
+                <div className="relative w-full h-full">
+                  <Image
+                    src={post.imageUrl}
+                    alt={post.brand}
+                    fill
+                    style={{ objectFit: 'contain' }}
+                    priority
+                    sizes="(max-width: 768px) 100vw, 500px"
+                    className="drop-shadow-xl hover:scale-105 transition-transform duration-500 ease-out"
+                  />
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 

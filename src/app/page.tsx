@@ -111,34 +111,36 @@ export default async function Home() {
           <Link href={`/watch-reviews/${featuredPost.slug}`} className="block group">
             <article className="bg-white rounded-3xl overflow-hidden shadow-2xl shadow-slate-200/50 flex flex-col md:flex-row border border-slate-100 group-hover:shadow-slate-300/60 transition-shadow">
               
-              <div className="relative w-full md:w-3/5 aspect-video md:aspect-auto md:min-h-[450px] bg-slate-100 overflow-hidden">
-                <Image
-                  src={featuredPost.imageUrl}
-                  alt={featuredPost.title}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  priority
-                  sizes="(max-width: 768px) 100vw, 60vw"
-                  className="group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
+              <div className="relative w-full md:w-2/5 aspect-square md:aspect-auto md:min-h-[400px] bg-white p-6 overflow-hidden flex items-center justify-center">
+                <div className="relative w-full h-full">
+                  <Image
+                    src={featuredPost.imageUrl}
+                    alt={featuredPost.title}
+                    fill
+                    style={{ objectFit: 'contain' }}
+                    priority
+                    sizes="(max-width: 768px) 100vw, 40vw"
+                    className="group-hover:scale-105 transition-transform duration-700 ease-out drop-shadow-md"
+                  />
+                </div>
                 <div className="absolute top-6 left-6 bg-slate-900/80 backdrop-blur-md text-white px-4 py-2 rounded-lg text-sm font-bold tracking-widest uppercase flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
                   Top Pick
                 </div>
                 {featuredPost.isDeal && (
-                  <div className="absolute top-6 right-6 bg-brand-red text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg shadow-brand-red/30">
+                  <div className="absolute top-6 right-6 bg-brand-red text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg shadow-brand-red/30 z-10">
                     {featuredPost.discountPercentage ? `🔥 ${featuredPost.discountPercentage}% OFF` : '🔥 HOT DEAL'}
                   </div>
                 )}
               </div>
 
-              <div className="w-full md:w-2/5 p-8 md:p-12 flex flex-col justify-center bg-white relative">
-                <div className="flex items-center gap-3 mb-6">
-                  <span className="bg-primary-50 text-primary-600 px-3 py-1 rounded-md text-xs font-bold uppercase tracking-widest">{featuredPost.brand}</span>
+              <div className="w-full md:w-3/5 p-8 md:p-12 flex flex-col justify-center bg-slate-50 relative border-l border-slate-100">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="bg-primary-100 text-primary-700 px-3 py-1 rounded-md text-xs font-bold uppercase tracking-widest">{featuredPost.brand}</span>
                   <ReadingTime content={featuredPost.content} />
                 </div>
                 
-                <h2 className="text-3xl lg:text-4xl font-black text-slate-900 leading-tight mb-4 font-outfit group-hover:text-primary-600 transition-colors">
+                <h2 className="text-2xl lg:text-3xl font-black text-slate-900 leading-tight mb-4 font-outfit group-hover:text-primary-600 transition-colors line-clamp-3">
                   {featuredPost.title}
                 </h2>
                 
@@ -185,38 +187,37 @@ export default async function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {gridPosts.map((post) => (
             <Link key={post.id} href={`/watch-reviews/${post.slug}`} className="block group h-full">
-              <article className="bg-white rounded-2xl overflow-hidden border border-slate-200 card-hover h-full flex flex-col relative">
+              <article className="bg-white rounded-2xl overflow-hidden border border-slate-200 card-hover h-full flex flex-col relative group">
                 
-                <div className="relative w-full aspect-[4/3] bg-slate-100 overflow-hidden">
-                  <Image
-                    src={post.imageUrl}
-                    alt={post.title}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    className="group-hover:scale-105 transition-transform duration-500 ease-out"
-                  />
+                <div className="relative w-full aspect-square bg-white p-6 overflow-hidden flex items-center justify-center border-b border-slate-100">
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={post.imageUrl}
+                      alt={post.title}
+                      fill
+                      style={{ objectFit: 'contain' }}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="group-hover:scale-110 transition-transform duration-500 ease-out drop-shadow-sm"
+                    />
+                  </div>
                   {post.isDeal && (
-                    <div className="absolute top-4 right-4 bg-brand-red text-white px-3 py-1.5 rounded-md text-xs font-bold shadow-sm">
+                    <div className="absolute top-4 right-4 bg-brand-red text-white px-3 py-1.5 rounded-md text-xs font-bold shadow-sm z-10">
                       {post.discountPercentage ? `🔥 ${post.discountPercentage}% OFF` : '🔥 DEAL'}
                     </div>
                   )}
                   
                   {/* Hover Overlay Button */}
-                  <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <span className="bg-white text-slate-900 px-6 py-2 rounded-full font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                      Read Review
-                    </span>
+                  <div className="absolute inset-0 bg-slate-900/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-20 pointer-events-none">
                   </div>
                 </div>
 
-                <div className="p-6 flex flex-col flex-grow">
+                <div className="p-6 flex flex-col flex-grow bg-slate-50/50">
                   <div className="flex justify-between items-center mb-3">
-                    <span className="text-primary-600 text-xs font-bold uppercase tracking-widest bg-primary-50 px-2 py-1 rounded">{post.brand}</span>
+                    <span className="text-primary-700 text-xs font-bold uppercase tracking-widest bg-primary-100 px-2 py-1 rounded">{post.brand}</span>
                     <StarRating rating={post.ratingValue} />
                   </div>
                   
-                  <h3 className="text-xl font-bold text-slate-900 mb-3 leading-snug group-hover:text-primary-600 transition-colors line-clamp-2">
+                  <h3 className="text-lg font-bold text-slate-900 mb-3 leading-snug group-hover:text-primary-600 transition-colors line-clamp-2">
                     {post.title}
                   </h3>
                   
