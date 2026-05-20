@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import Script from 'next/script';
 
 export const revalidate = 3600;
 
@@ -90,8 +91,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
       {/* Reading Progress Bar */}
       <div id="progress-bar" className="fixed top-0 left-0 h-1 bg-gradient-to-r from-primary-500 to-brand-red z-50 transition-all duration-150" style={{ width: '0%' }}></div>
-      <script dangerouslySetInnerHTML={{
-        __html: `
+      <Script id="progress-bar-script">
+        {`
           window.addEventListener('scroll', function() {
             var el = document.getElementById('progress-bar');
             if (!el) return;
@@ -99,12 +100,12 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             var docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             el.style.width = (scrollTop / docHeight * 100) + '%';
           });
-        `
-      }} />
+        `}
+      </Script>
 
       {/* Star Rating Interaction Script */}
-      <script dangerouslySetInnerHTML={{
-        __html: `
+      <Script id="star-rating-script">
+        {`
           window.addEventListener('DOMContentLoaded', function() {
             var widget = document.getElementById('user-star-rating');
             var thanks = document.getElementById('rating-thanks');
@@ -153,8 +154,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               chevron.classList.toggle('rotate-180');
             }
           }
-        `
-      }} />
+        `}
+      </Script>
 
       <div className="bg-slate-50 min-h-screen pb-24 lg:pb-0">
 
