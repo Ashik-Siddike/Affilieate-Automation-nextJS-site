@@ -3,9 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
 
-export async function generateMetadata({ searchParams }: { searchParams: Promise<{ q?: string }> }): Promise<Metadata> {
-  const resolvedParams = await searchParams;
-  const query = resolvedParams.q || '';
+export async function generateMetadata({ searchParams }: { searchParams: { q?: string } }): Promise<Metadata> {
+  const query = searchParams.q || '';
   return {
     title: `Search results for "${query}" | Whit Logic`,
     description: `Search results for ${query} on Whit Logic budget tactical watch reviews.`,
@@ -13,20 +12,8 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
   };
 }
 
-function StarRating({ rating = 4.5 }: { rating?: number }) {
-  const full = Math.floor(rating);
-  const half = rating % 1 >= 0.5;
-  return (
-    <span aria-label={`${rating} out of 5 stars`} className="text-primary-500 text-sm tracking-widest">
-      {'★'.repeat(full)}{half ? '½' : ''}{'☆'.repeat(5 - full - (half ? 1 : 0))}
-      <span className="text-slate-500 text-xs ml-1 tracking-normal font-medium">({rating})</span>
-    </span>
-  );
-}
-
-export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
-  const resolvedParams = await searchParams;
-  const query = resolvedParams.q || '';
+export default async function SearchPage({ searchParams }: { searchParams: { q?: string } }) {
+  const query = searchParams.q || '';
 
   const posts = await prisma.post.findMany({
     where: {
@@ -41,57 +28,78 @@ export default async function SearchPage({ searchParams }: { searchParams: Promi
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-32 pb-24 px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        
-        <div className="mb-12 text-center max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-primary-50 text-primary-600 px-4 py-1.5 rounded-full mb-4">
-            <span className="text-xs font-bold uppercase tracking-widest">Search Results</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-4 font-outfit tracking-tight">
-            Results for <span className="text-primary-500">"{query}"</span>
+    <div style={{ minHeight: '100vh', background: '#f8fafc', fontFamily: "'Inter', sans-serif" }}>
+      
+      {/* ── Premium Search Header ── */}
+      <section className="animate-gradient" style={{
+        background: 'linear-gradient(-45deg, #0f172a, #1e293b, #0a0f1d, #172554)',
+        backgroundSize: '400% 400%',
+        padding: '120px 24px 80px',
+        position: 'relative',
+        overflow: 'hidden',
+        textAlign: 'center'
+      }}>
+        <div className="animate-float" style={{
+          position: 'absolute', top: '-100px', right: '-100px',
+          width: '400px', height: '400px',
+          background: 'radial-gradient(circle, rgba(245,158,11,0.15) 0%, transparent 70%)',
+          borderRadius: '50%', filter: 'blur(40px)',
+        }} />
+        <div style={{ position: 'relative', zIndex: 1, maxWidth: '800px', margin: '0 auto' }} className="animate-fade-in-up">
+          <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 900, color: 'white', marginBottom: '16px', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
+            Search Results
           </h1>
-          <p className="text-slate-500 text-lg">
-            {posts.length} {posts.length === 1 ? 'match' : 'matches'} found based on your search criteria.
+          <p style={{ color: '#94a3b8', fontSize: '1.2rem', maxWidth: '600px', margin: '0 auto' }}>
+            {posts.length} {posts.length === 1 ? 'result' : 'results'} found for <span style={{ color: '#fde68a', fontWeight: 700 }}>"{query}"</span>
           </p>
         </div>
+      </section>
+
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '60px 24px' }}>
 
         {posts.length === 0 ? (
-          <div className="bg-white p-12 md:p-20 rounded-3xl text-center border border-slate-200 shadow-sm max-w-2xl mx-auto">
-            <div className="text-6xl mb-6">🔍</div>
-            <h2 className="text-2xl font-bold text-slate-900 mb-4 font-outfit">No reviews found</h2>
-            <p className="text-slate-500 mb-8 text-lg">We couldn't find any watches matching your search. Try adjusting your keywords.</p>
-            <Link href="/" className="inline-block bg-slate-900 text-white px-8 py-3 rounded-xl font-bold hover:bg-slate-800 hover:shadow-lg transition-all">
+          <div style={{ background: 'white', padding: '60px', borderRadius: '16px', textAlign: 'center', border: '1px solid #e2e8f0' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🔍</div>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a', marginBottom: '8px' }}>No reviews found</h2>
+            <p style={{ color: '#64748b', marginBottom: '24px' }}>We couldn't find any watches matching your search. Try different keywords.</p>
+            <Link href="/" style={{
+              display: 'inline-block', background: '#f59e0b', color: 'white',
+              padding: '12px 24px', borderRadius: '8px', fontWeight: 600, textDecoration: 'none'
+            }}>
               Back to Home
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div style={{
+            display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '24px'
+          }}>
             {posts.map((post) => (
-              <Link key={post.id} href={`/watch-reviews/${post.slug}`} className="block group h-full">
-                <article className="bg-white rounded-2xl overflow-hidden border border-slate-200 card-hover h-full flex flex-col relative group">
-                  
-                  <div className="relative w-full aspect-square bg-white p-6 overflow-hidden flex items-center justify-center border-b border-slate-100">
-                    <div className="relative w-full h-full">
-                      <Image src={post.imageUrl} alt={post.title} fill style={{ objectFit: 'contain' }} sizes="(max-width: 768px) 100vw, 300px" className="group-hover:scale-110 transition-transform duration-500 ease-out drop-shadow-sm" />
-                    </div>
+              <Link key={post.id} href={`/watch-reviews/${post.slug}`} style={{ textDecoration: 'none' }}>
+                <article className="card-hover" style={{
+                  background: 'white', borderRadius: '20px', overflow: 'hidden',
+                  height: '100%', display: 'flex', flexDirection: 'column'
+                }}>
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '4/3', background: '#f1f5f9', overflow: 'hidden' }}>
+                    <Image src={post.imageUrl} alt={post.title} fill style={{ objectFit: 'cover' }} sizes="(max-width: 768px) 100vw, 300px" className="transition-transform duration-500 hover:scale-105" />
                     {post.isDeal && (
-                      <div className="absolute top-4 right-4 bg-brand-red text-white px-3 py-1.5 rounded-md text-xs font-bold shadow-sm z-10">
+                      <div style={{
+                        position: 'absolute', top: '12px', right: '12px',
+                        background: '#ef4444', color: 'white', padding: '4px 8px',
+                        borderRadius: '6px', fontSize: '0.75rem', fontWeight: 'bold'
+                      }}>
                         {post.discountPercentage ? `🔥 ${post.discountPercentage}% OFF` : '🔥 DEAL'}
                       </div>
                     )}
                   </div>
-                  
-                  <div className="p-5 flex flex-col flex-grow bg-slate-50/50">
-                    <div className="flex justify-between items-center mb-3">
-                      <span className="text-primary-700 text-[10px] font-bold uppercase tracking-widest bg-primary-100 px-2 py-1 rounded">{post.brand}</span>
-                      <StarRating rating={post.ratingValue} />
+                  <div style={{ padding: '20px', flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <span style={{ color: '#f59e0b', fontSize: '0.8rem', fontWeight: 'bold', textTransform: 'uppercase' }}>{post.brand}</span>
+                      <span style={{ color: '#f59e0b', fontSize: '0.85rem' }}>★ {post.ratingValue?.toFixed(1) || '4.5'}</span>
                     </div>
-                    <h3 className="text-sm md:text-base font-bold text-slate-900 mb-2 leading-snug group-hover:text-primary-600 transition-colors line-clamp-3 font-outfit">
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 'bold', color: '#0f172a', marginBottom: '8px', lineHeight: 1.4 }}>
                       {post.title}
                     </h3>
                   </div>
-
                 </article>
               </Link>
             ))}

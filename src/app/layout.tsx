@@ -107,11 +107,11 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
         />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" href="/logo.png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
         <meta name="theme-color" content="#0f172a" />
       </head>
-      <body className="antialiased flex flex-col min-h-screen">
+      <body className="antialiased flex flex-col min-h-screen" suppressHydrationWarning>
         <Navbar />
         <main className="flex-grow">{children}</main>
         <Footer />
