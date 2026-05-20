@@ -12,8 +12,9 @@ const CATEGORY_MAP: Record<string, string> = {
   'digital': 'Best Digital Watches'
 };
 
-export async function generateMetadata({ params }: { params: { category: string } }): Promise<Metadata> {
-  const cat = params.category.toLowerCase();
+export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
+  const { category } = await params;
+  const cat = category.toLowerCase();
   const title = CATEGORY_MAP[cat] || `Best ${cat.replace(/-/g, ' ')} Watches`;
   
   return {
@@ -34,8 +35,9 @@ function StarRating({ rating = 4.5 }: { rating?: number }) {
   );
 }
 
-export default async function CategoryPage({ params }: { params: { category: string } }) {
-  const categorySlug = params.category.toLowerCase();
+export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
+  const { category } = await params;
+  const categorySlug = category.toLowerCase();
   
   // If not a known category, let them see it anyway, but with a generic title
   const pageTitle = CATEGORY_MAP[categorySlug] || `Best ${categorySlug.replace(/-/g, ' ')} Watches`;

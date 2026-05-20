@@ -3,8 +3,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
 
-export async function generateMetadata({ searchParams }: { searchParams: { q?: string } }): Promise<Metadata> {
-  const query = searchParams.q || '';
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ q?: string }> }): Promise<Metadata> {
+  const resolvedParams = await searchParams;
+  const query = resolvedParams.q || '';
   return {
     title: `Search results for "${query}" | Whit Logic`,
     description: `Search results for ${query} on Whit Logic budget tactical watch reviews.`,
@@ -23,8 +24,9 @@ function StarRating({ rating = 4.5 }: { rating?: number }) {
   );
 }
 
-export default async function SearchPage({ searchParams }: { searchParams: { q?: string } }) {
-  const query = searchParams.q || '';
+export default async function SearchPage({ searchParams }: { searchParams: Promise<{ q?: string }> }) {
+  const resolvedParams = await searchParams;
+  const query = resolvedParams.q || '';
 
   const posts = await prisma.post.findMany({
     where: {

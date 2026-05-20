@@ -5,8 +5,9 @@ import { Metadata } from 'next';
 
 export const revalidate = 3600;
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = await prisma.post.findUnique({ where: { slug: params.slug } });
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await prisma.post.findUnique({ where: { slug } });
   if (!post) return { title: 'Not Found' };
   
   return {
@@ -24,8 +25,9 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function PostPage({ params }: { params: { slug: string } }) {
-  const post = await prisma.post.findUnique({ where: { slug: params.slug } });
+export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const post = await prisma.post.findUnique({ where: { slug } });
   if (!post) notFound();
 
   const publishedDate = new Date(post.createdAt).toLocaleDateString('en-US', {
