@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import SpecTable from '@/components/SpecTable';
+import ShareButtons from '@/components/ShareButtons';
 
 interface ReviewPageProps {
   params: Promise<{ slug: string }>;
@@ -432,6 +433,8 @@ export default async function WatchReviewPage({ params }: ReviewPageProps) {
           });
         `
       }} />
+
+      <ShareButtons title={post.title} />
 
       <div className="review-page bg-slate-50 min-h-screen pb-24 lg:pb-0">
 
