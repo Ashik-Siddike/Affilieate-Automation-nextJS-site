@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { title, content, amazonAffiliateLink, imageUrl, brand, modelNumber } = body;
+    const { title, content, amazonAffiliateLink, imageUrl, brand, modelNumber, faqs, category } = body;
 
     // Validate payload
     if (!title || !content || !amazonAffiliateLink || !imageUrl || !brand || !modelNumber) {
@@ -51,6 +51,8 @@ export async function POST(req: Request) {
         imageUrl,
         brand,
         modelNumber,
+        faqs: faqs ?? undefined,
+        category: category ?? 'tactical',
       },
     });
 
@@ -86,5 +88,41 @@ export async function POST(req: Request) {
   } catch (error: any) {
     console.error('API Post Creation Error:', error);
     return NextResponse.json({ error: 'Internal Server Error', details: error.message }, { status: 500 });
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const apiSecret = req.headers.get('x-bot-api-secret');
+    if (apiSecret !== process.env.BOT_API_SECRET) {
+      return NextResponse.json({ error: 'Unauthorized Access' }, { status: 401 });
+    }
+
+    const body = await req.json();
+    const { modelNumber, isDeal, discountPercentage } = body;
+
+    if (!modelNumber) {
+      return NextResponse.json({ error: 'Missing modelNumber' }, { status: 400 });
+    }
+
+    const post = await prisma.post.updateMany({
+      where: { modelNumber },
+      data: {
+        isDeal: Boolean(isDeal),
+        discountPercentage: discountPercentage ? String(discountPercentage) : null,
+      },
+    });
+
+    if (post.count === 0) {
+      return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+    }
+
+    revalidatePath('/');
+    // We can't revalidate specific slug easily without fetching it, but revalidating home is good
+    return NextResponse.json({ success: true, message: 'Deal updated successfully' }, { status: 200 });
+
+  } catch (error: any) {
+    console.error('API Deal Update Error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

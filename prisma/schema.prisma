@@ -19,6 +19,12 @@ model Post {
   modelNumber         String
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
+  isDeal              Boolean  @default(false)
+  discountPercentage  String?
+  faqs                Json?
+  ratingValue         Float    @default(4.5)
+  ratingCount         Int      @default(89)
+  category            String   @default("tactical")
 }
 
 model products {
@@ -52,4 +58,11 @@ model sites {
   n8n_webhook  String?
   keywords     String[] @default([])
   created_at   DateTime @default(now())
+}
+
+model bot_config {
+  key         String   @id
+  value       String?
+  description String?
+  updated_at  DateTime @default(now()) @updatedAt
 }
