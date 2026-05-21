@@ -191,7 +191,7 @@ export default function ShareButtons({ title }: { title: string }) {
 
         .mobile-share {
           position: fixed;
-          bottom: 24px;
+          bottom: 96px;
           left: 50%;
           transform: translateX(-50%);
           background: white;
