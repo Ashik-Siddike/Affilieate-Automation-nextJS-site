@@ -170,11 +170,12 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ p
       {/* ══ FEATURED POST (ONLY ON PAGE 1) ══ */}
       {featuredPost && (
         <section style={{ maxWidth: '1280px', margin: '0 auto', padding: '60px 24px 0' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px', flexWrap: 'wrap' }}>
             <span style={{
               background: 'linear-gradient(135deg, #f59e0b, #ef4444)',
               color: 'white', padding: '4px 14px', borderRadius: '999px',
               fontSize: '0.75rem', fontWeight: '800', letterSpacing: '0.08em', textTransform: 'uppercase',
+              whiteSpace: 'nowrap', flexShrink: 0
             }}>⚡ Editor's Pick</span>
             <h2 style={{ fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>Featured Review</h2>
           </div>
