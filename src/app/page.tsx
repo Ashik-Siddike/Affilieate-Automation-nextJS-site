@@ -150,7 +150,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ p
         </div>
 
         {/* Stats Bar */}
-        <div className="glass-dark" style={{
+        <div className="glass-dark stats-grid" style={{
           maxWidth: '850px', margin: '60px auto 0',
           display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
           gap: '1px',
@@ -180,7 +180,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ p
           </div>
 
           <Link href={`/watch-reviews/${featuredPost.slug}`} style={{ textDecoration: 'none', display: 'block' }}>
-            <article className="card-hover" style={{
+            <article className="card-hover featured-card" style={{
               background: 'white', borderRadius: '24px', overflow: 'hidden',
               display: 'grid', gridTemplateColumns: '1fr 1fr',
             }}

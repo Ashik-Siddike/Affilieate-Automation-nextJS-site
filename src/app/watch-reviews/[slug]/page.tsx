@@ -697,7 +697,8 @@ export default async function WatchReviewPage({ params }: ReviewPageProps) {
                   <div style={{ height: '1px', background: '#e2e8f0', margin: '20px 0' }} />
 
                   {/* Model & Brand */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '20px' }}>
+                  {/* Model & Brand */}
+                  <div className="pros-cons-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '20px' }}>
                     {[['Brand', post.brand], ['Model', post.modelNumber]].map(([label, val]) => (
                       <div key={label} style={{ background: '#f8fafc', borderRadius: '10px', padding: '10px 14px' }}>
                         <div style={{ color: '#94a3b8', fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
