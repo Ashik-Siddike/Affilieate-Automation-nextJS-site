@@ -1,14 +1,66 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+
+interface SearchResult {
+  id: string;
+  title: string;
+  slug: string;
+  imageUrl: string;
+  brand: string;
+  ratingValue: number;
+}
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+  
+  const searchRef = useRef<HTMLDivElement>(null);
+  const mobileSearchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+      if (mobileSearchRef.current && !mobileSearchRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      if (searchQuery.trim().length >= 2) {
+        setIsSearching(true);
+        try {
+          const res = await fetch(`/api/search?q=${encodeURIComponent(searchQuery.trim())}`);
+          const data = await res.json();
+          setSearchResults(data.results?.slice(0, 5) || []);
+          setShowDropdown(true);
+        } catch (e) {
+          console.error(e);
+        } finally {
+          setIsSearching(false);
+        }
+      } else {
+        setSearchResults([]);
+        setShowDropdown(false);
+      }
+    }, 300); // 300ms debounce
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -18,9 +70,9 @@ export default function Navbar() {
 
   const navLinks = [
     { href: '/', label: 'Home' },
-    { href: '/watches/tactical', label: 'Tactical' },
-    { href: '/watches/budget-under-20', label: 'Under $20' },
-    { href: '/watches/waterproof', label: 'Waterproof' },
+    { href: '/category/tactical', label: 'Tactical' },
+    { href: '/category/sports', label: 'Sports' },
+    { href: '/category/military', label: 'Military' },
   ];
 
   const handleSearch = (e: React.FormEvent) => {
@@ -78,36 +130,80 @@ export default function Navbar() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
             
             {/* Desktop Search */}
-            <form onSubmit={handleSearch} className="desktop-search" style={{ position: 'relative' }}>
-              <input
-                type="text"
-                placeholder="Search watches..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  background: 'rgba(255,255,255,0.08)',
-                  border: '1px solid rgba(255,255,255,0.15)',
-                  borderRadius: '999px',
-                  padding: '8px 16px 8px 36px',
-                  color: 'white',
-                  fontSize: '0.85rem',
-                  outline: 'none',
-                  width: '200px',
-                  transition: 'all 0.3s ease',
-                }}
-                onFocus={(e) => {
-                  e.target.style.background = 'rgba(255,255,255,0.15)';
-                  e.target.style.borderColor = '#f59e0b';
-                  e.target.style.width = '240px';
-                }}
-                onBlur={(e) => {
-                  e.target.style.background = 'rgba(255,255,255,0.08)';
-                  e.target.style.borderColor = 'rgba(255,255,255,0.15)';
-                  e.target.style.width = '200px';
-                }}
-              />
-              <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5, fontSize: '14px' }}>🔍</span>
-            </form>
+            <div ref={searchRef} className="desktop-search" style={{ position: 'relative' }}>
+              <form onSubmit={handleSearch}>
+                <input
+                  type="text"
+                  placeholder="Search watches..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    if (e.target.value.trim().length > 0) setShowDropdown(true);
+                  }}
+                  onFocus={() => {
+                    if (searchQuery.trim().length >= 2) setShowDropdown(true);
+                  }}
+                  style={{
+                    background: 'rgba(255,255,255,0.08)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    borderRadius: showDropdown && searchResults.length > 0 ? '20px 20px 0 0' : '999px',
+                    padding: '8px 16px 8px 36px',
+                    color: 'white',
+                    fontSize: '0.85rem',
+                    outline: 'none',
+                    width: showDropdown ? '300px' : '220px',
+                    transition: 'all 0.3s ease',
+                  }}
+                />
+                <span style={{ position: 'absolute', left: '12px', top: '9px', opacity: 0.5, fontSize: '14px' }}>🔍</span>
+              </form>
+              
+              {/* Desktop Live Search Dropdown */}
+              {showDropdown && searchQuery.trim().length >= 2 && (
+                <div style={{
+                  position: 'absolute', top: '100%', left: 0, right: 0,
+                  background: 'rgba(15, 23, 42, 0.95)', backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255,255,255,0.15)', borderTop: 'none',
+                  borderRadius: '0 0 16px 16px', overflow: 'hidden',
+                  boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)', zIndex: 100,
+                }}>
+                  {isSearching ? (
+                    <div style={{ padding: '16px', textAlign: 'center', color: '#94a3b8', fontSize: '0.85rem' }}>Searching...</div>
+                  ) : searchResults.length > 0 ? (
+                    <>
+                      {searchResults.map((res) => (
+                        <Link key={res.id} href={`/watch-reviews/${res.slug}`} onClick={() => setShowDropdown(false)} style={{
+                          display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 16px', textDecoration: 'none',
+                          borderBottom: '1px solid rgba(255,255,255,0.05)', transition: 'background 0.2s'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                        >
+                          <div style={{ position: 'relative', width: '36px', height: '36px', borderRadius: '4px', overflow: 'hidden', flexShrink: 0, background: '#f1f5f9' }}>
+                            <Image src={res.imageUrl} alt={res.title} fill style={{ objectFit: 'cover' }} sizes="36px" />
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <span style={{ color: 'white', fontSize: '0.85rem', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px' }}>
+                              {res.title}
+                            </span>
+                            <span style={{ color: '#f59e0b', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase' }}>
+                              {res.brand} • ★ {res.ratingValue}
+                            </span>
+                          </div>
+                        </Link>
+                      ))}
+                      <div style={{ padding: '8px', textAlign: 'center', background: 'rgba(0,0,0,0.2)' }}>
+                        <Link href={`/search?q=${encodeURIComponent(searchQuery)}`} onClick={() => setShowDropdown(false)} style={{ color: '#f59e0b', fontSize: '0.8rem', fontWeight: 600, textDecoration: 'none' }}>
+                          View all results →
+                        </Link>
+                      </div>
+                    </>
+                  ) : (
+                    <div style={{ padding: '16px', textAlign: 'center', color: '#94a3b8', fontSize: '0.85rem' }}>No results found.</div>
+                  )}
+                </div>
+              )}
+            </div>
 
             {/* Mobile Hamburger */}
             <button
@@ -132,25 +228,76 @@ export default function Navbar() {
             padding: '16px 0',
             display: 'flex', flexDirection: 'column', gap: '8px',
           }}>
-            <form onSubmit={handleSearch} style={{ position: 'relative', marginBottom: '12px' }}>
-              <input
-                type="text"
-                placeholder="Search watches..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                style={{
-                  background: 'rgba(255,255,255,0.08)',
-                  border: '1px solid rgba(255,255,255,0.15)',
-                  borderRadius: '8px',
-                  padding: '12px 16px 12px 36px',
-                  color: 'white',
-                  fontSize: '1rem',
-                  outline: 'none',
-                  width: '100%',
-                }}
-              />
-              <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', opacity: 0.5, fontSize: '16px' }}>🔍</span>
-            </form>
+            <div ref={mobileSearchRef} style={{ position: 'relative', marginBottom: '12px' }}>
+              <form onSubmit={handleSearch}>
+                <input
+                  type="text"
+                  placeholder="Search watches..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    if (e.target.value.trim().length > 0) setShowDropdown(true);
+                  }}
+                  onFocus={() => {
+                    if (searchQuery.trim().length >= 2) setShowDropdown(true);
+                  }}
+                  style={{
+                    background: 'rgba(255,255,255,0.08)',
+                    border: '1px solid rgba(255,255,255,0.15)',
+                    borderRadius: showDropdown && searchResults.length > 0 ? '8px 8px 0 0' : '8px',
+                    padding: '12px 16px 12px 36px',
+                    color: 'white',
+                    fontSize: '1rem',
+                    outline: 'none',
+                    width: '100%',
+                  }}
+                />
+                <span style={{ position: 'absolute', left: '12px', top: '13px', opacity: 0.5, fontSize: '16px' }}>🔍</span>
+              </form>
+              
+              {/* Mobile Live Search Dropdown */}
+              {showDropdown && searchQuery.trim().length >= 2 && (
+                <div style={{
+                  position: 'absolute', top: '100%', left: 0, right: 0,
+                  background: 'rgba(15, 23, 42, 0.95)', backdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(255,255,255,0.15)', borderTop: 'none',
+                  borderRadius: '0 0 8px 8px', overflow: 'hidden',
+                  boxShadow: '0 10px 25px -5px rgba(0,0,0,0.5)', zIndex: 100,
+                }}>
+                  {isSearching ? (
+                    <div style={{ padding: '16px', textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem' }}>Searching...</div>
+                  ) : searchResults.length > 0 ? (
+                    <>
+                      {searchResults.map((res) => (
+                        <Link key={res.id} href={`/watch-reviews/${res.slug}`} onClick={() => { setShowDropdown(false); setIsOpen(false); }} style={{
+                          display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 16px', textDecoration: 'none',
+                          borderBottom: '1px solid rgba(255,255,255,0.05)',
+                        }}>
+                          <div style={{ position: 'relative', width: '40px', height: '40px', borderRadius: '4px', overflow: 'hidden', flexShrink: 0, background: '#f1f5f9' }}>
+                            <Image src={res.imageUrl} alt={res.title} fill style={{ objectFit: 'cover' }} sizes="40px" />
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <span style={{ color: 'white', fontSize: '0.9rem', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '80%' }}>
+                              {res.title}
+                            </span>
+                            <span style={{ color: '#f59e0b', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase' }}>
+                              {res.brand} • ★ {res.ratingValue}
+                            </span>
+                          </div>
+                        </Link>
+                      ))}
+                      <div style={{ padding: '12px', textAlign: 'center', background: 'rgba(0,0,0,0.2)' }}>
+                        <Link href={`/search?q=${encodeURIComponent(searchQuery)}`} onClick={() => { setShowDropdown(false); setIsOpen(false); }} style={{ color: '#f59e0b', fontSize: '0.9rem', fontWeight: 600, textDecoration: 'none' }}>
+                          View all results →
+                        </Link>
+                      </div>
+                    </>
+                  ) : (
+                    <div style={{ padding: '16px', textAlign: 'center', color: '#94a3b8', fontSize: '0.9rem' }}>No results found.</div>
+                  )}
+                </div>
+              )}
+            </div>
             {navLinks.map((link) => (
               <Link
                 key={link.href}

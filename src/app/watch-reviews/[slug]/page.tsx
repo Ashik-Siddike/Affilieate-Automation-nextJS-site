@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
+import Script from 'next/script';
 import SpecTable from '@/components/SpecTable';
 import ShareButtons from '@/components/ShareButtons';
 
@@ -392,7 +393,7 @@ export default async function WatchReviewPage({ params }: ReviewPageProps) {
 
       {/* Reading Progress Bar */}
       <div id="progress-bar"></div>
-      <script dangerouslySetInnerHTML={{
+      <Script id="progress-script" dangerouslySetInnerHTML={{
         __html: `
           window.addEventListener('scroll', function() {
             var el = document.getElementById('progress-bar');
@@ -405,7 +406,7 @@ export default async function WatchReviewPage({ params }: ReviewPageProps) {
       }} />
 
       {/* Star Rating Interaction Script */}
-      <script dangerouslySetInnerHTML={{
+      <Script id="rating-script" dangerouslySetInnerHTML={{
         __html: `
           window.addEventListener('DOMContentLoaded', function() {
             var widget = document.getElementById('user-star-rating');

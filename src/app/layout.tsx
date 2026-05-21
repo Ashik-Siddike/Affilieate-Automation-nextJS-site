@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import NewsletterPopup from "@/components/NewsletterPopup";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({
@@ -115,6 +116,7 @@ export default function RootLayout({
         <Navbar />
         <main className="flex-grow">{children}</main>
         <Footer />
+        <NewsletterPopup />
         <GoogleAnalytics gaId="G-0KVLY4SLLB" />
       </body>
     </html>

@@ -25,6 +25,8 @@ model Post {
   ratingValue         Float    @default(4.5)
   ratingCount         Int      @default(89)
   category            String   @default("tactical")
+  isVsArticle         Boolean  @default(false)
+  tags                String[] @default([])
 }
 
 model products {
@@ -65,4 +67,10 @@ model bot_config {
   value       String?
   description String?
   updated_at  DateTime @default(now()) @updatedAt
+}
+
+model Subscriber {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
 }

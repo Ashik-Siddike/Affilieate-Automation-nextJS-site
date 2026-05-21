@@ -29,14 +29,23 @@ function ReadingTime({ content }: { content?: string }) {
   return <span style={{ color: '#94a3b8', fontSize: '0.72rem' }}>⏱ {mins} min read</span>;
 }
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  const resolvedParams = await searchParams;
+  const page = parseInt(resolvedParams.page || '1');
+  const take = 13; // 1 for featured + 12 for grid
+  const skip = (page - 1) * take;
+
+  const totalPosts = await prisma.post.count();
+  const hasMore = skip + take < totalPosts;
+
   const posts = await prisma.post.findMany({
     orderBy: { createdAt: 'desc' },
-    take: 12,
+    take: take,
+    skip: skip,
   });
 
-  const featuredPost = posts[0];
-  const gridPosts = posts.slice(1);
+  const featuredPost = page === 1 ? posts[0] : null;
+  const gridPosts = page === 1 ? posts.slice(1) : posts;
 
   const stats = [
     { value: posts.length + '+', label: 'Reviews Published' },
@@ -158,7 +167,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ══ FEATURED POST ══ */}
+      {/* ══ FEATURED POST (ONLY ON PAGE 1) ══ */}
       {featuredPost && (
         <section style={{ maxWidth: '1280px', margin: '0 auto', padding: '60px 24px 0' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
@@ -319,6 +328,26 @@ export default async function Home() {
             ))}
           </div>
         )}
+
+        {/* ══ PAGINATION ══ */}
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '60px', gap: '16px' }}>
+          {page > 1 && (
+            <Link href={`/?page=${page - 1}#reviews`} style={{
+              padding: '12px 24px', background: 'white', border: '1px solid #e2e8f0', borderRadius: '12px',
+              color: '#0f172a', fontWeight: 700, textDecoration: 'none', boxShadow: '0 4px 6px rgba(0,0,0,0.05)'
+            }}>
+              ← Previous Page
+            </Link>
+          )}
+          {hasMore && (
+            <Link href={`/?page=${page + 1}#reviews`} style={{
+              padding: '12px 24px', background: 'white', border: '1px solid #e2e8f0', borderRadius: '12px',
+              color: '#0f172a', fontWeight: 700, textDecoration: 'none', boxShadow: '0 4px 6px rgba(0,0,0,0.05)'
+            }}>
+              Next Page →
+            </Link>
+          )}
+        </div>
       </section>
 
       {/* ══ WHY TRUST US ══ */}
