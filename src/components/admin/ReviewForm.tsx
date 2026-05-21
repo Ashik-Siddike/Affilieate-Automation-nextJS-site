@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { deleteReviewAction } from '@/app/admin/actions';
 
 export default function ReviewForm({ id }: { id: string }) {
   const router = useRouter();
@@ -109,8 +110,8 @@ export default function ReviewForm({ id }: { id: string }) {
     if (!confirm('Are you sure you want to delete this review?')) return;
     setDeleting(true);
     try {
-      const res = await fetch(`/api/admin/reviews/${id}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Failed to delete');
+      const res = await deleteReviewAction(id);
+      if (!res.success) throw new Error(res.error || 'Failed to delete');
       router.push('/admin/reviews');
       router.refresh();
     } catch (err: any) {

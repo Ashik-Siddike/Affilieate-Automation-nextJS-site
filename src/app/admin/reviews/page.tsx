@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
+import DeleteButton from '@/components/admin/DeleteButton';
 
 // Prevent static rendering since we want real-time admin data
 export const dynamic = 'force-dynamic';
@@ -62,10 +63,11 @@ export default async function AdminReviewsPage() {
                     <Link 
                       href={`/watch-reviews/${post.slug}`} 
                       target="_blank"
-                      style={{ color: '#64748b', textDecoration: 'none', fontWeight: 600 }}
+                      style={{ color: '#64748b', textDecoration: 'none', fontWeight: 600, marginRight: '16px' }}
                     >
                       View ↗
                     </Link>
+                    <DeleteButton id={post.id} />
                   </td>
                 </tr>
               ))
