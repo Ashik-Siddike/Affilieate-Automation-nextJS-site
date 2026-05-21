@@ -55,7 +55,7 @@ export default function NewsletterPopup() {
 
   return (
     <div style={{
-      position: 'fixed', bottom: '24px', right: '24px', zIndex: 1000,
+      position: 'fixed', bottom: '24px', left: '50%', transform: 'translateX(-50%)', zIndex: 1000,
       background: 'rgba(15, 23, 42, 0.95)', backdropFilter: 'blur(20px)',
       padding: '24px', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.1)',
       boxShadow: '0 20px 40px -10px rgba(0,0,0,0.5)', width: 'calc(100% - 48px)', maxWidth: '380px',

@@ -30,6 +30,8 @@ html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 body {
@@ -55,6 +57,13 @@ body {
   
   /* Stack pros/cons on mobile */
   .pros-cons-grid { grid-template-columns: 1fr !important; }
+  
+  /* Stack footer columns on mobile */
+  .footer-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+  
+  /* Stack watch actions on mobile */
+  .hero-cta-box { flex-direction: column !important; align-items: stretch !important; }
+  .hero-cta-box .cta-primary { width: 100% !important; justify-content: center !important; }
 }
 @media (min-width: 769px) {
   .hamburger-btn { display: none !important; }

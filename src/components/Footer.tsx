@@ -23,7 +23,7 @@ export default function Footer() {
     <footer style={{ background: '#0a0f1d', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
       {/* Main Footer Content */}
       <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '60px 24px 40px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '48px', flexWrap: 'wrap' }}>
+        <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '48px', flexWrap: 'wrap' }}>
           {/* Brand Column */}
           <div>
             <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
