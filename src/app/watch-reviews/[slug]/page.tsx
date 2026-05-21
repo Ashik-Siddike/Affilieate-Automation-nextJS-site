@@ -582,14 +582,7 @@ export default async function WatchReviewPage({ params }: ReviewPageProps) {
                   </h2>
                   {faqList.map((faq, i) => (
                     <div key={i} className="faq-item">
-                      <div className="faq-question" onClick={() => {
-                        const answer = document.getElementById(`faq-answer-${i}`);
-                        const chevron = document.getElementById(`faq-chevron-${i}`);
-                        if (answer && chevron) {
-                          answer.classList.toggle('open');
-                          chevron.classList.toggle('open');
-                        }
-                      }}>
+                      <div className="faq-question" data-faq-index={i}>
                         <span>{faq.question}</span>
                         <span className="faq-chevron" id={`faq-chevron-${i}`}>▾</span>
                       </div>
@@ -598,6 +591,25 @@ export default async function WatchReviewPage({ params }: ReviewPageProps) {
                       </div>
                     </div>
                   ))}
+                  
+                  <Script id="faq-script" strategy="afterInteractive" dangerouslySetInnerHTML={{
+                    __html: `
+                      window.addEventListener('DOMContentLoaded', function() {
+                        var questions = document.querySelectorAll('.faq-question');
+                        questions.forEach(function(q) {
+                          q.addEventListener('click', function() {
+                            var idx = this.getAttribute('data-faq-index');
+                            var answer = document.getElementById('faq-answer-' + idx);
+                            var chevron = document.getElementById('faq-chevron-' + idx);
+                            if (answer && chevron) {
+                              answer.classList.toggle('open');
+                              chevron.classList.toggle('open');
+                            }
+                          });
+                        });
+                      });
+                    `
+                  }} />
                 </div>
               )}
 
