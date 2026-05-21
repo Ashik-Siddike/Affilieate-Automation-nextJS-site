@@ -44,9 +44,10 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
     orderBy: { createdAt: 'desc' },
   });
 
-  if (posts.length === 0) {
-    notFound();
-  }
+  // Remove notFound() to show the "Coming soon" UI instead
+  // if (posts.length === 0) {
+  //   notFound();
+  // }
 
   const categoryName = slug.charAt(0).toUpperCase() + slug.slice(1);
 
@@ -72,70 +73,78 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
       {/* ══ GRID SECTION ══ */}
       <section style={{ maxWidth: '1280px', margin: '0 auto', padding: '60px 24px 80px' }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-          gap: '24px',
-        }}>
-          {posts.map((post, i) => (
-            <article
-              key={post.id}
-              className="card-hover"
-              style={{
-                background: 'white', borderRadius: '20px', overflow: 'hidden',
-                boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #e2e8f0',
-                display: 'flex', flexDirection: 'column',
-                animation: `fadeInUp 0.5s ease-out ${i * 0.05}s both`,
-              }}
-            >
-              <Link href={`/watch-reviews/${post.slug}`} style={{ textDecoration: 'none', display: 'block', position: 'relative', aspectRatio: '1 / 1', height: 'auto' }}>
-                <Image
-                  src={post.imageUrl}
-                  alt={post.title}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-500 ease-in-out hover:scale-105"
-                />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%)' }} />
-                <div style={{ position: 'absolute', top: '12px', left: '12px', display: 'flex', gap: '6px' }}>
-                  <span style={{
-                    background: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(8px)',
-                    color: 'white', padding: '3px 10px', borderRadius: '999px',
-                    fontSize: '0.7rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em',
-                  }}>{post.brand}</span>
-                </div>
-              </Link>
+        {posts.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '80px 0' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '16px' }}>🕐</div>
+            <h3 style={{ fontSize: '1.3rem', color: '#475569', fontWeight: '600' }}>Reviews coming soon!</h3>
+            <p style={{ color: '#94a3b8', marginTop: '8px' }}>We are currently testing watches for the {categoryName} category. Check back soon.</p>
+          </div>
+        ) : (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+            gap: '24px',
+          }}>
+            {posts.map((post, i) => (
+              <article
+                key={post.id}
+                className="card-hover"
+                style={{
+                  background: 'white', borderRadius: '20px', overflow: 'hidden',
+                  boxShadow: '0 2px 12px rgba(0,0,0,0.06)', border: '1px solid #e2e8f0',
+                  display: 'flex', flexDirection: 'column',
+                  animation: `fadeInUp 0.5s ease-out ${i * 0.05}s both`,
+                }}
+              >
+                <Link href={`/watch-reviews/${post.slug}`} style={{ textDecoration: 'none', display: 'block', position: 'relative', aspectRatio: '1 / 1', height: 'auto' }}>
+                  <Image
+                    src={post.imageUrl}
+                    alt={post.title}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-500 ease-in-out hover:scale-105"
+                  />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%)' }} />
+                  <div style={{ position: 'absolute', top: '12px', left: '12px', display: 'flex', gap: '6px' }}>
+                    <span style={{
+                      background: 'rgba(15,23,42,0.85)', backdropFilter: 'blur(8px)',
+                      color: 'white', padding: '3px 10px', borderRadius: '999px',
+                      fontSize: '0.7rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em',
+                    }}>{post.brand}</span>
+                  </div>
+                </Link>
 
-              <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <StarRating rating={post.ratingValue || 4.5} />
-                  <ReadingTime content={post.content} />
-                </div>
+                <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <StarRating rating={post.ratingValue || 4.5} />
+                    <ReadingTime content={post.content} />
+                  </div>
 
-                <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: '#0f172a', lineHeight: 1.4, marginBottom: '8px' }}>
-                  <Link href={`/watch-reviews/${post.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                    {post.title}
-                  </Link>
-                </h3>
+                  <h3 style={{ fontSize: '1.05rem', fontWeight: '700', color: '#0f172a', lineHeight: 1.4, marginBottom: '8px' }}>
+                    <Link href={`/watch-reviews/${post.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                      {post.title}
+                    </Link>
+                  </h3>
 
-                <div style={{ marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
-                    {new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                  </span>
-                  <Link
-                    href={`/watch-reviews/${post.slug}`}
-                    style={{
-                      display: 'inline-flex', alignItems: 'center', gap: '4px',
-                      color: '#f59e0b', fontWeight: '700', fontSize: '0.82rem', textDecoration: 'none',
-                    }}
-                  >
-                    Read Review <span style={{ fontSize: '1rem' }}>→</span>
-                  </Link>
+                  <div style={{ marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
+                      {new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </span>
+                    <Link
+                      href={`/watch-reviews/${post.slug}`}
+                      style={{
+                        display: 'inline-flex', alignItems: 'center', gap: '4px',
+                        color: '#f59e0b', fontWeight: '700', fontSize: '0.82rem', textDecoration: 'none',
+                      }}
+                    >
+                      Read Review <span style={{ fontSize: '1rem' }}>→</span>
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </article>
-          ))}
-        </div>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
     </main>
   );
