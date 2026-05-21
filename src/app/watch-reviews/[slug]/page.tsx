@@ -57,6 +57,16 @@ export default async function WatchReviewPage({ params }: ReviewPageProps) {
 
   if (!post) notFound();
 
+  // Fetch 3 related posts based on category (excluding current post)
+  const relatedPosts = await prisma.post.findMany({
+    where: {
+      category: post.category,
+      NOT: { slug: post.slug }
+    },
+    take: 3,
+    orderBy: { createdAt: 'desc' }
+  });
+
   // JSON-LD Schemas
   const jsonLd = {
     '@context': 'https://schema.org', '@type': 'Article',
@@ -708,6 +718,55 @@ export default async function WatchReviewPage({ params }: ReviewPageProps) {
               </div>
             </aside>
         </div>
+
+        {/* ───── RELATED WATCHES SECTION ───── */}
+        {relatedPosts.length > 0 && (
+          <div style={{ maxWidth: '1200px', margin: '0 auto 60px', padding: '0 24px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px' }}>
+              <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0f172a', margin: 0 }}>
+                You May Also Like
+              </h2>
+              <div style={{ height: '3px', flex: 1, background: 'linear-gradient(90deg, #f59e0b, transparent)' }} />
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
+              {relatedPosts.map((related) => (
+                <Link key={related.id} href={`/watch-reviews/${related.slug}`} style={{ textDecoration: 'none' }}>
+                  <div style={{ 
+                    background: 'white', borderRadius: '16px', border: '1px solid #e2e8f0', 
+                    overflow: 'hidden', transition: 'all 0.3s ease', height: '100%',
+                    display: 'flex', flexDirection: 'column', boxShadow: '0 4px 15px rgba(0,0,0,0.03)' 
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.boxShadow = '0 12px 30px rgba(0,0,0,0.08)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.03)'; }}
+                  >
+                    <div style={{ height: '220px', background: '#f8fafc', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                      {related.isDeal && (
+                        <div style={{ position: 'absolute', top: '12px', left: '12px', background: '#ef4444', color: 'white', fontSize: '11px', fontWeight: 800, padding: '4px 10px', borderRadius: '999px', zIndex: 2 }}>
+                          {related.discountPercentage} OFF
+                        </div>
+                      )}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={related.imageUrl} alt={related.title} style={{ width: '100%', height: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} />
+                    </div>
+                    <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>
+                        <span style={{ color: '#fbbf24', fontSize: '13px' }}>★★★★½</span>
+                        <span style={{ color: '#94a3b8', fontSize: '12px', fontWeight: 600 }}>({related.ratingCount})</span>
+                      </div>
+                      <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#1e293b', marginBottom: '12px', lineHeight: 1.4, flex: 1 }}>
+                        {related.title.length > 60 ? related.title.substring(0, 60) + '...' : related.title}
+                      </h3>
+                      <div style={{ color: '#f59e0b', fontSize: '13px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        Read Review <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* ───── MOBILE STICKY CTA ───── */}
         <div className="mobile-cta">
