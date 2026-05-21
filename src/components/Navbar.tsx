@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 
 interface SearchResult {
@@ -25,6 +25,7 @@ export default function Navbar() {
   const searchRef = useRef<HTMLDivElement>(null);
   const mobileSearchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -73,6 +74,8 @@ export default function Navbar() {
     { href: '/category/tactical', label: 'Tactical' },
     { href: '/category/sports', label: 'Sports' },
     { href: '/category/military', label: 'Military' },
+    { href: '/about', label: 'About' },
+    { href: '/contact', label: 'Contact' },
   ];
 
   const handleSearch = (e: React.FormEvent) => {
@@ -110,20 +113,26 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }} className="desktop-nav">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                style={{
-                  color: '#94a3b8', textDecoration: 'none', fontWeight: '600',
-                  fontSize: '0.9rem', transition: 'color 0.2s', letterSpacing: '0.02em',
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = '#94a3b8')}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href || (link.href !== '/' && pathname?.startsWith(link.href));
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  style={{
+                    color: isActive ? '#ffffff' : '#94a3b8', textDecoration: 'none', fontWeight: isActive ? '700' : '600',
+                    fontSize: '0.9rem', transition: 'all 0.2s', letterSpacing: '0.02em', position: 'relative'
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = isActive ? '#ffffff' : '#94a3b8')}
+                >
+                  {link.label}
+                  {isActive && (
+                    <div style={{ position: 'absolute', bottom: '-4px', left: 0, right: 0, height: '2px', background: '#f59e0b', borderRadius: '2px' }} />
+                  )}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Search, CTA + Hamburger */}
@@ -298,19 +307,28 @@ export default function Navbar() {
                 </div>
               )}
             </div>
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setIsOpen(false)}
-                style={{
-                  color: '#94a3b8', textDecoration: 'none', padding: '10px 0',
-                  fontWeight: '500', fontSize: '0.95rem', borderBottom: '1px solid rgba(255,255,255,0.05)',
-                }}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href || (link.href !== '/' && pathname?.startsWith(link.href));
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setIsOpen(false)}
+                  style={{
+                    color: isActive ? '#f59e0b' : '#94a3b8', 
+                    textDecoration: 'none', 
+                    padding: '12px 16px',
+                    borderRadius: '8px',
+                    background: isActive ? 'rgba(245,158,11,0.05)' : 'transparent',
+                    fontWeight: isActive ? '700' : '500', 
+                    fontSize: '0.95rem',
+                    display: 'block'
+                  }}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>
