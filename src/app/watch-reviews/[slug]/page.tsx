@@ -389,6 +389,8 @@ export default async function WatchReviewPage({ params }: ReviewPageProps) {
           padding: 0 20px;
         }
         .faq-answer.open { max-height: 300px; padding: 16px 20px; }
+        .related-card { transition: all 0.3s ease; }
+        .related-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.08) !important; }
       `}</style>
 
       {/* Reading Progress Bar */}
@@ -745,14 +747,11 @@ export default async function WatchReviewPage({ params }: ReviewPageProps) {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '24px' }}>
               {relatedPosts.map((related) => (
                 <Link key={related.id} href={`/watch-reviews/${related.slug}`} style={{ textDecoration: 'none' }}>
-                  <div style={{ 
+                  <div className="related-card" style={{ 
                     background: 'white', borderRadius: '16px', border: '1px solid #e2e8f0', 
-                    overflow: 'hidden', transition: 'all 0.3s ease', height: '100%',
+                    overflow: 'hidden', height: '100%',
                     display: 'flex', flexDirection: 'column', boxShadow: '0 4px 15px rgba(0,0,0,0.03)' 
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-6px)'; e.currentTarget.style.boxShadow = '0 12px 30px rgba(0,0,0,0.08)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 15px rgba(0,0,0,0.03)'; }}
-                  >
+                  }}>
                     <div style={{ height: '220px', background: '#f8fafc', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                       {related.isDeal && (
                         <div style={{ position: 'absolute', top: '12px', left: '12px', background: '#ef4444', color: 'white', fontSize: '11px', fontWeight: 800, padding: '4px 10px', borderRadius: '999px', zIndex: 2 }}>
