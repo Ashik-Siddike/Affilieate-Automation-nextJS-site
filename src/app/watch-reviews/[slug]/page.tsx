@@ -752,14 +752,14 @@ export default async function WatchReviewPage({ params }: ReviewPageProps) {
                     overflow: 'hidden', height: '100%',
                     display: 'flex', flexDirection: 'column', boxShadow: '0 4px 15px rgba(0,0,0,0.03)' 
                   }}>
-                    <div style={{ height: '220px', background: '#f8fafc', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                    <div style={{ aspectRatio: '1 / 1', background: '#f8fafc', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                       {related.isDeal && (
                         <div style={{ position: 'absolute', top: '12px', left: '12px', background: '#ef4444', color: 'white', fontSize: '11px', fontWeight: 800, padding: '4px 10px', borderRadius: '999px', zIndex: 2 }}>
                           {related.discountPercentage} OFF
                         </div>
                       )}
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={related.imageUrl} alt={related.title} style={{ width: '100%', height: '100%', objectFit: 'contain', mixBlendMode: 'multiply' }} />
+                      <img src={related.imageUrl} alt={related.title} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                     </div>
                     <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px' }}>

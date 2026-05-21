@@ -279,7 +279,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ p
                   animation: `fadeInUp 0.5s ease-out ${i * 0.05}s both`,
                 }}
               >
-                <Link href={`/watch-reviews/${post.slug}`} style={{ textDecoration: 'none', display: 'block', position: 'relative', height: '220px' }}>
+                <Link href={`/watch-reviews/${post.slug}`} style={{ textDecoration: 'none', display: 'block', position: 'relative', aspectRatio: '1 / 1', height: 'auto' }}>
                   <Image
                     src={post.imageUrl}
                     alt={post.title}

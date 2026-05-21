@@ -79,7 +79,7 @@ export default async function SearchPage({ searchParams }: { searchParams: { q?:
                   background: 'white', borderRadius: '20px', overflow: 'hidden',
                   height: '100%', display: 'flex', flexDirection: 'column'
                 }}>
-                  <div style={{ position: 'relative', width: '100%', aspectRatio: '4/3', background: '#f1f5f9', overflow: 'hidden' }}>
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', background: '#f1f5f9', overflow: 'hidden' }}>
                     <Image src={post.imageUrl} alt={post.title} fill style={{ objectFit: 'cover' }} sizes="(max-width: 768px) 100vw, 300px" className="transition-transform duration-500 hover:scale-105" />
                     {post.isDeal && (
                       <div style={{
